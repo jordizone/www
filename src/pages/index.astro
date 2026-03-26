@@ -1,17 +1,105 @@
 ---
+import '../styles/global.css';
+
+const posts = [
+  {
+    title: 'Long live the internet',
+    readTime: '10 min read',
+    category: 'Tech',
+    date: '23.03.26'
+  },
+  {
+    title: 'Another post',
+    readTime: '5 min read',
+    category: 'Tech',
+    date: '23.03.26'
+  },
+  {
+    title: 'Yet another post',
+    readTime: '3 min read',
+    category: 'Thoughts',
+    date: '23.03.26'
+  }
+];
 
 ---
 
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
+		<link rel="icon" href="https://emojicdn.elk.sh/🍊" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
+		<title>jordizone</title>
 	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
+	<body class="min-h-screen flex flex-col antialiased">
+		<header class="border-b border-neutral-200">
+			<nav class="mx-auto max-w-xl flex items-center justify-between py-4 px-6 border-l border-r border-zinc-200"> <div class="font-mono flex items-center gap-2"> <a href="/" class="font-mono hover:text-orange-500 text-sm"> @jordi.zone </a> </div><span id="cet-clock" class="font-mono text-sm text-zinc-500"></span></nav>
+		</header>
+		<main class="flex-1 w-full mx-auto max-w-xl border-r border-l border-zinc-200">
+			<div class="h-42 border-b-zinc-50">
+				<img src="/clouds.jpeg" alt="Cover" class="w-full h-full object-cover">
+			</div>
+			<div class="p-6">
+			<section class="flex gap-4">
+				<div>
+					<h1 class="font-medium text-lg">Jordi Capellades</h1>		
+					<div class="mt-2">
+						<p class=" text-neutral-500 font-mono text-sm">I'm a web developer and I'm trying to build a life I'm proud of. Here you can find my thoughts, projects and photography.</p>
+					</div>
+				</div>
+			</section>
+			<section class="mt-16">
+				<h2 class="font-medium mb-6">Recent posts</h2>
+				<table class="w-full border-collapse border border-zinc-200">
+					<thead>
+						<tr>
+							<th class="border border-zinc-200 p-2 text-left font-mono text-sm">Title</th>
+							<th class="border border-zinc-200 p-2 text-left font-mono text-sm">Read time</th>
+							<th class="border border-zinc-200 p-2 text-left font-mono text-sm">Category</th>
+							<th class="border border-zinc-200 p-2 text-right font-mono text-sm">Date</th>
+						</tr>
+					</thead>
+					<tbody>
+						{
+							posts.map((post) => (
+								<tr class="hover:bg-zinc-50">
+									<td class="border border-zinc-200 p-2 font-mono text-sm">{post.title}</td>
+									<td class="border border-zinc-200 p-2 text-sm text-zinc-500 font-mono">{post.readTime}</td>
+									<td class="border border-zinc-200 p-2 text-sm text-zinc-500 font-mono">{post.category}</td>
+									<td class="border border-zinc-200 p-2 text-right text-sm text-zinc-500 font-mono">{post.date}</td>
+								</tr>
+							))
+						}
+					</tbody>
+				</table>
+				<div class="mt-4 text-right">
+					<a href="/blog" class="text-sm text-zinc-500 hover:text-orange-500">View all posts -></a>
+				</div>
+			</section>
+			</div>
+		</main>
+		<footer class="border-t border-zinc-200 text-sm text-zinc-500">
+			<div class="py-4 font-mono px-6 mx-auto max-w-xl flex items-center justify-between border-l border-r border-zinc-200">
+				Hello world
+			</div>
+		</footer>
+	<script>
+	function updateClock() {
+		const now = new Date();
+		const time = now.toLocaleTimeString('en-GB', { timeZone: 'Europe/Berlin', hour: '2-digit', minute: '2-digit' });
+		const clockElement = document.getElementById('cet-clock');
+		if (clockElement) {
+			clockElement.textContent = time + ' CET';
+		}
+	}
+	updateClock();
+	setInterval(updateClock, 1000);
+</script>
+</body>
 </html>
