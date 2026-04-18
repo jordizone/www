@@ -1,168 +1,40 @@
 ---
-import '../styles/global.css';
-import { ArrowRight, BookOpen, Eye } from '@lucide/astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
 
-const posts = [
-  {
-    title: 'Long live the internet',
-    readTime: "10 min",
-    category: 'Tech',
-    date: '23.03.26',
-    link: '/blog/long-live-the-internet'
-  },
-  {
-    title: 'How I build this site',
-    readTime: '5 min',
-    category: 'Tech',
-    date: '23.03.26',
-    link: '/blog/how-i-build-this-site'
-  },
-  {
-    title: 'Riprenditi te stesso',
-    readTime: '3 min',
-    category: 'Thoughts',
-    date: '23.03.26',
-    link: '/blog/yet-another-post'
-  },
-  {
-    title: 'Lost in the Amazon',
-    readTime: '2 min',
-    category: 'Travel',
-    date: '23.03.26',
-    link: '/blog/lost-in-the-amazon'
-  }
-];
+const posts = (await getCollection('blog')).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
 
-const projects = [
-  {
-    title: 'Building a NAS',
-    description: 'Description 1',
-    category: 'Tech',
-    link: '/projects/project-1',
-    image: '/clouds.jpeg'
-  },
-  {
-    title: 'Once - A minimal futbol app',
-    description: 'Description 2',
-    category: 'App',
-    link: '/projects/project-2',
-    image: '/clouds.jpeg'
-  },
-  {
-    title: 'Photography',
-    description: 'Description 3',
-    category: 'Photography',
-    link: '/projects/project-3',
-    image: '/clouds.jpeg'
-  }
-];
-
+const formatDate = (date: Date) =>
+  date.toLocaleDateString('en-GB', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" href="https://emojicdn.elk.sh/🍊" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<link rel="preconnect" href="https://fonts.googleapis.com">
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
-		<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet">
-		<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
-		<title>Jordi Capellades</title>
-	</head>
-	<body class="min-h-screen flex flex-col antialiased">
-		<header class="border-b border-neutral-200">
-			<nav class="mx-auto max-w-2xl flex items-center justify-between py-4 px-6 border-l border-r border-zinc-200">
-				<div class="font-mono flex items-center gap-2">
-					<a href="/" class="font-mono text-zinc-500 text-sm">@jordi.zone</a>
-				</div>
-				<span id="cet-clock" class="font-mono text-sm text-zinc-500"></span>
-			</nav>
-		</header>
-		<main class="flex-1 w-full mx-auto max-w-2xl border-r border-l border-zinc-200">
-			<div class="h-42 border-b-zinc-50">
-				<img src="/clouds.jpeg" alt="Cover" class="w-full h-full object-cover">
-			</div>
-			<div class="p-6">
-			<section class="flex gap-4">
-				<div>
-					<h1 class="font-medium">Jordi Capellades</h1>		
-					<div class="mt-2">
-						<p class=" text-neutral-500 font-mono text-sm">I'm a web developer and I'm trying to build a life I'm proud of. Here you can find my thoughts, projects and photography.</p>
-					</div>
-				</div>
-			</section>
-			<section class="mt-16">
-				<h2 class="font-medium mb-6 text-2xl font-serif">Recent posts</h2>
-				<table class="w-full border-collapse border border-zinc-200">
-					<thead>
-						<tr>
-							<th class="border border-zinc-200 bg-zinc-100 p-2 text-left font-mono text-xs">Title</th>
-							<th class="border border-zinc-200 bg-zinc-100 p-2 text-left font-mono text-xs">Read time</th>
-							<th class="border border-zinc-200 bg-zinc-100 p-2 text-left font-mono text-xs">Category</th>
-							<th class="border border-zinc-200 bg-zinc-100 p-2 text-right font-mono text-xs">Date</th>
-							<th class="border border-zinc-200 bg-zinc-100 p-2 text-right font-mono text-xs">Actions</th>
-						</tr>
-					</thead>
-					<tbody>
-						{
-							posts.map((post) => (
-								<tr class="hover:bg-zinc-50">
-									<td class="border border-zinc-200 p-2 font-mono text-sm">
-										{post.title}
-									</td>
-									<td class="border border-zinc-200 p-2 text-sm text-zinc-500 font-mono">{post.readTime}</td>
-									<td class="border border-zinc-200 p-2 text-sm text-zinc-500 font-mono">{post.category}</td>
-									<td class="border border-zinc-200 p-2 text-right text-sm text-zinc-500 font-mono">{post.date}</td>
-									<td class="border border-zinc-200 p-2 text-right">
-										<a href={post.link} class="inline-flex items-center gap-1 text-sm text-zinc-500 transition-colors"><BookOpen size={14} /></a>
-									</td>
-								</tr>
-							))
-						}
-					</tbody>
-				</table>
-				<div class="mt-4 text-right">
-					<a href="/blog" class="text-sm text-zinc-500 hover:text-zinc-700 transition-colors inline-flex items-center gap-1 hover:underline">View all posts<ArrowRight size={14} /></a>
-				</div>
-			</section>
-			<section class="mt-16">
-				<h2 class="font-medium mb-6 text-2xl font-serif">Recent projects</h2>
-				<!-- Projects will go here -->
-				 <div class="grid grid-cols-2 gap-4">
-					{
-						projects.map((project) => (
-							<div class="border border-zinc-200 rounded hover:opacity-80 hover:cursor-pointer transition-opacity">
-								<img src={project.image} alt={project.title} class="w-full h-36 object-cover"/>
-								<div class="p-2">{project.title}</div>
-							</div>
-						))
-					}
-				 </div>
-				 <div class="mt-4 text-right">
-					<a href="/projects" class="text-sm text-zinc-500 hover:text-zinc-700 transition-colors inline-flex items-center gap-1 hover:underline">View all projects<ArrowRight size={14} /></a>
-				</div>
-			</section>
-			</div>
-		</main>
-		<footer class="border-t border-zinc-200 text-sm text-zinc-500">
-			<div class="py-4 font-mono px-6 mx-auto max-w-2xl text-xs flex items-center justify-between border-l border-r border-zinc-200">
-				© {new Date().getFullYear()} jordi capellades
-			</div>
-		</footer>
-	<script>
-	function updateClock() {
-		const now = new Date();
-		const time = now.toLocaleTimeString('en-GB', { timeZone: 'Europe/Berlin', hour: '2-digit', minute: '2-digit' });
-		const clockElement = document.getElementById('cet-clock');
-		if (clockElement) {
-			clockElement.textContent = time + ' CET';
-		}
-	}
-	updateClock();
-	setInterval(updateClock, 1000);
-</script>
-</body>
-</html>
+<BaseLayout title="Jordi Capellades" description="Personal site of Jordi Capellades — web developer. Thoughts, projects, and photography.">
+  <h1 class="sr-only">Jordi Capellades</h1>
+  <section class="flex gap-4">
+    <div>
+      <div class="mt-2">
+        <p class="text-fg"><span class="text-fg-emphasis font-medium">I'm Jordi</span>, a web developer. This is where I keep what I'm thinking about, what I'm building, and what I've seen. A small corner of the internet that's mine.</p>
+      </div>
+    </div>
+  </section>
+  <section class="mt-20">
+    <ul class="space-y-2">
+      {
+        posts.map((post) => (
+          <li>
+            <a href={`/blog/${post.id}`} class="group flex items-baseline justify-between gap-4 text-md text-fg hover:text-fg-strong transition-colors">
+              <span>{post.data.title}</span>
+              <span class="font-mono text-sm text-fg-muted group-hover:text-fg transition-colors">{formatDate(post.data.pubDate)}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</BaseLayout>

@@ -1,0 +1,36 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const posts = (await getCollection('blog')).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+
+const formatDate = (date: Date) =>
+  date.toLocaleDateString('en-GB', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
+---
+
+<BaseLayout title="Blog · Jordi Capellades" description="Writing from Jordi Capellades.">
+  <h1 class="text-3xl text-fg-strong mb-8">Blog</h1>
+  <ul class="space-y-2">
+    {
+      posts.map((post) => (
+        <li>
+          <a
+            href={`/blog/${post.id}`}
+            class="group flex items-baseline justify-between gap-4 text-sm text-fg hover:text-fg-strong transition-colors"
+          >
+            <span>{post.data.title}</span>
+            <span class="font-mono text-xs text-fg-muted group-hover:text-fg transition-colors">
+              {formatDate(post.data.pubDate)}
+            </span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</BaseLayout>

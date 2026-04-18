@@ -1,0 +1,50 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    {description && <meta name="description" content={description} />}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&display=swap" rel="stylesheet" />
+    <title>{title}</title>
+  </head>
+  <body class="min-h-screen flex flex-col antialiased">
+    <header class="w-full">
+      <nav aria-label="Primary" class="flex items-baseline justify-end py-4 px-6">
+        <div class="space-x-4">
+          <span id="cet-clock" aria-live="off" class="font-mono text-sm text-fg-muted"></span>
+        </div>
+      </nav>
+    </header>
+    <main class="flex-1 w-full mx-auto max-w-content px-6 mt-60 pb-12">
+      <slot />
+    </main>
+    <script is:inline>
+      function updateClock() {
+        const now = new Date();
+        const time = now.toLocaleTimeString('en-GB', { timeZone: 'Europe/Berlin', hour: '2-digit', minute: '2-digit' });
+        const clockElement = document.getElementById('cet-clock');
+        if (clockElement) {
+          clockElement.textContent = time + ' CET';
+        }
+      }
+      updateClock();
+      setInterval(updateClock, 1000);
+    </script>
+  </body>
+</html>

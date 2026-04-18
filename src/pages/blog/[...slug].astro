@@ -1,0 +1,43 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { Undo2 } from '@lucide/astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const formatDate = (date: Date) =>
+  date.toLocaleDateString('en-GB', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
+---
+
+<BaseLayout title={post.data.title} description={post.data.description}>
+  <article>
+    <header class="mb-8">
+      <div class="flex items-baseline justify-between mb-4">
+        <a href="/" aria-label="Back to home" class="text-fg-muted flex items-center gap-1 hover:text-fg-emphasis transition-colors">
+          <Undo2 class="h-4" aria-hidden="true" />back
+        </a>
+        <p class="mt-2 font-mono text-sm text-fg-muted">
+          {formatDate(post.data.pubDate)}
+          {post.data.updatedDate && <span> · updated {formatDate(post.data.updatedDate)}</span>}
+        </p>
+      </div>
+      <h1 class="font-serif text-5xl text-fg-strong">{post.data.title}</h1>
+    </header>
+    <div class="prose-content space-y-4 text-fg leading-relaxed">
+      <Content />
+    </div>
+  </article>
+</BaseLayout>
