@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+@view-transition {
+    navigation: auto;
+}
+
 @theme {
     --font-sans: "Inter", sans-serif;
     --font-serif: "EB Garamond", serif;
@@ -58,6 +62,30 @@ html, body {
     width: 260px;
     background: var(--color-bg);
     will-change: transform;
+    view-transition-name: sidebar;
+}
+
+main {
+    view-transition-name: main-content;
+}
+
+::view-transition-old(main-content),
+::view-transition-new(main-content) {
+    animation-duration: 200ms;
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+::view-transition-old(sidebar),
+::view-transition-new(sidebar) {
+    animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    ::view-transition-group(*),
+    ::view-transition-old(*),
+    ::view-transition-new(*) {
+        animation: none !important;
+    }
 }
 @media (min-width: 768px) {
     #sidebar { width: 220px; }
