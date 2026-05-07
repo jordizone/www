@@ -1,0 +1,31 @@
+---
+import { sections } from '../data/nav';
+
+const pathname = Astro.url.pathname;
+const isActive = (href: string) =>
+  href === '/' ? pathname === '/' : pathname === href || pathname.startsWith(href + '/');
+---
+
+<nav aria-label="Sections">
+  <ul class="space-y-1">
+    {
+      sections.map((section) => {
+        const active = isActive(section.href);
+        return (
+          <li>
+            <a
+              href={section.href}
+              aria-current={active ? 'page' : undefined}
+              class:list={[
+                'block py-1 text-md transition-colors',
+                active ? 'text-fg-strong font-medium' : 'text-fg hover:text-fg-strong',
+              ]}
+            >
+              {section.label}
+            </a>
+          </li>
+        );
+      })
+    }
+  </ul>
+</nav>

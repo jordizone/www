@@ -1,0 +1,21 @@
+---
+import { socials } from "../data/nav";
+---
+
+<ul class="flex items-center gap-4 font-mono text-xs text-fg-muted">
+  {
+    socials.map((social) => (
+      <li>
+        <a
+          href={social.href}
+          aria-label={social.label}
+          class="hover:text-fg-strong transition-colors"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {social.label}
+        </a>
+      </li>
+    ))
+  }
+</ul>
