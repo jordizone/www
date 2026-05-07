@@ -48,3 +48,37 @@ html, body {
 .prose-content pre { background: var(--color-surface-hover); padding: 1rem; border-radius: var(--radius-md); overflow-x: auto; }
 .prose-content pre code { background: transparent; padding: 0; }
 .prose-content blockquote { border-left: 2px solid var(--color-border); padding-left: 1rem; color: var(--color-fg-muted); }
+
+#sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 40;
+    width: 260px;
+    background: var(--color-bg);
+    will-change: transform;
+}
+@media (min-width: 768px) {
+    #sidebar { width: 220px; }
+}
+html[data-sidebar="closed"] #sidebar { transform: translateX(-100%); }
+html[data-sidebar="open"] #sidebar { transform: translateX(0); }
+
+#sidebar-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 30;
+    background: rgb(0 0 0 / 0.2);
+    opacity: 0;
+    pointer-events: none;
+}
+html[data-sidebar="open"] #sidebar-backdrop { opacity: 1; pointer-events: auto; }
+@media (min-width: 768px) {
+    #sidebar-backdrop { display: none; }
+}
+
+#main-column { padding-left: 0; will-change: padding-left; }
+@media (min-width: 768px) {
+    html[data-sidebar="open"] #main-column { padding-left: 220px; }
+}

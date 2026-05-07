@@ -1,5 +1,7 @@
 ---
 import '../styles/global.css';
+import { PanelLeft } from '@lucide/astro';
+import Sidebar from '../components/Sidebar.astro';
 
 interface Props {
   title: string;
@@ -22,18 +24,39 @@ const { title, description } = Astro.props;
     <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&display=swap" rel="stylesheet" />
     <title>{title}</title>
+    <script is:inline>
+      (function () {
+        var stored = null;
+        try { stored = localStorage.getItem('sidebar'); } catch (e) {}
+        var initial = stored;
+        if (initial !== 'open' && initial !== 'closed') {
+          initial = window.matchMedia('(min-width: 768px)').matches ? 'open' : 'closed';
+        }
+        document.documentElement.dataset.sidebar = initial;
+      })();
+    </script>
   </head>
-  <body class="min-h-screen flex flex-col antialiased">
-    <header class="w-full">
-      <nav aria-label="Primary" class="flex items-baseline justify-end py-4 px-6">
-        <div class="space-x-4">
+  <body class="min-h-screen antialiased">
+    <Sidebar />
+    <div id="main-column" class="min-w-0 flex flex-col min-h-screen">
+      <header class="w-full">
+        <nav aria-label="Primary" class="flex items-baseline justify-between py-4 px-6">
+          <button
+            type="button"
+            id="sidebar-toggle"
+            aria-label="Toggle sidebar"
+            aria-controls="sidebar"
+            class="text-fg-muted hover:text-fg-strong transition-colors"
+          >
+            <PanelLeft size={18} strokeWidth={1.5} />
+          </button>
           <span id="cet-clock" aria-live="off" class="font-mono text-sm text-fg-muted"></span>
-        </div>
-      </nav>
-    </header>
-    <main class="flex-1 w-full mx-auto max-w-content px-6 mt-60 pb-12">
-      <slot />
-    </main>
+        </nav>
+      </header>
+      <main class="flex-1 w-full mx-auto max-w-content px-6 mt-60 pb-12">
+        <slot />
+      </main>
+    </div>
     <script is:inline>
       function updateClock() {
         const now = new Date();
@@ -45,6 +68,9 @@ const { title, description } = Astro.props;
       }
       updateClock();
       setInterval(updateClock, 1000);
+    </script>
+    <script>
+      import '../scripts/sidebar.ts';
     </script>
   </body>
 </html>
