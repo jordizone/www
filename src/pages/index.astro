@@ -2,7 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 
-const posts = (await getCollection('blog')).sort(
+const posts = (await getCollection('writing')).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
 
@@ -13,7 +13,7 @@ const formatDate = (date: Date) =>
     year: 'numeric',
   });
 ---
-
+  
 <BaseLayout title="Jordi Capellades" description="Personal site of Jordi Capellades — web developer. Thoughts, projects, and photography.">
   <h1 class="sr-only">Jordi Capellades</h1>
   <section class="flex gap-4">
@@ -28,7 +28,7 @@ const formatDate = (date: Date) =>
       {
         posts.map((post) => (
           <li>
-            <a href={`/blog/${post.id}`} class="group flex items-baseline justify-between gap-4 text-md text-fg hover:text-fg-strong transition-colors">
+            <a href={`/writing/${post.id}`} class="group flex items-baseline justify-between gap-4 text-md text-fg hover:text-fg-strong transition-colors">
               <span>{post.data.title}</span>
               <span class="font-mono text-sm text-fg-muted group-hover:text-fg transition-colors">{formatDate(post.data.pubDate)}</span>
             </a>
