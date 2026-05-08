@@ -3,7 +3,7 @@ import SidebarNav from './SidebarNav.astro';
 import SocialLinks from './SocialLinks.astro';
 ---
 
-<aside id="sidebar" class="flex flex-col px-6 py-8">
+<aside id="sidebar" class="flex flex-col px-6 py-8" transition:persist="sidebar">
   <a href="/" class="text-md font-medium text-fg-strong hover:text-fg transition-colors">
     Jordi
   </a>
@@ -21,4 +21,5 @@ import SocialLinks from './SocialLinks.astro';
   type="button"
   id="sidebar-backdrop"
   aria-label="Close sidebar"
+  transition:persist="sidebar-backdrop"
 ></button>
