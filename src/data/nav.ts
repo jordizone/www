@@ -9,12 +9,10 @@ export type SocialLink = {
 };
 
 export const sections: NavSection[] = [
-  { label: "Writing", href: "/writing" },
-  { label: "Projects", href: "/projects" },
-  { label: "Lab", href: "/lab" },
-  { label: "Photos", href: "/photos" },
+  { label: 'Writing', href: '/writing' },
+  { label: 'Projects', href: '/projects' },
+  { label: 'Lab', href: '/lab' },
+  //{ label: "Photos", href: "/photos" },
 ];
 
-export const socials: SocialLink[] = [
-  { label: "GitHub", href: "https://github.com/jordizone" },
-];
+export const socials: SocialLink[] = [{ label: 'GitHub', href: 'https://github.com/jordizone' }];

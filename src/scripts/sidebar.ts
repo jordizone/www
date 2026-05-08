@@ -9,8 +9,7 @@ const EXPANDED_KEY = 'sidebar:expanded';
 const root = document.documentElement;
 
 const isDesktop = () => window.matchMedia('(min-width: 768px)').matches;
-const prefersReducedMotion = () =>
-  window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 const $sidebar = () => document.getElementById('sidebar');
 const $backdrop = () => document.getElementById('sidebar-backdrop');
@@ -38,11 +37,7 @@ function setSidebar(state: State, animateIt = true) {
   const backdrop = $backdrop();
 
   if (sidebar) {
-    animate(
-      sidebar,
-      { transform: isOpen ? 'translateX(0%)' : 'translateX(-100%)' },
-      opts,
-    );
+    animate(sidebar, { transform: isOpen ? 'translateX(0%)' : 'translateX(-100%)' }, opts);
   }
   if (backdrop && !desktop) {
     animate(backdrop, { opacity: isOpen ? 1 : 0 }, { duration: 0.2 });
@@ -68,9 +63,7 @@ function applyStoredExpanded() {
   const stored = readExpanded();
   for (const [key, expanded] of Object.entries(stored)) {
     const li = document.querySelector<HTMLElement>(`[data-section="${key}"]`);
-    const btn = document.querySelector<HTMLElement>(
-      `[data-disclosure="${key}"]`,
-    );
+    const btn = document.querySelector<HTMLElement>(`[data-disclosure="${key}"]`);
     if (!li || !btn) continue;
     if (li.dataset.expanded !== String(expanded)) {
       li.dataset.expanded = String(expanded);
@@ -85,10 +78,16 @@ function updateActiveStates() {
   document.querySelectorAll<HTMLElement>('[data-folder-href]').forEach((el) => {
     const href = el.dataset.folderHref!;
     const active = pathname === href || pathname.startsWith(href + '/');
+    const current = pathname === href;
     el.classList.toggle('bg-surface-hover', active);
     el.classList.toggle('text-fg-strong', active);
     el.classList.toggle('text-fg', !active);
     el.classList.toggle('hover:bg-surface-hover', !active);
+    if (current) {
+      el.setAttribute('aria-current', 'page');
+    } else {
+      el.removeAttribute('aria-current');
+    }
   });
 
   document.querySelectorAll<HTMLElement>('[data-active-href]').forEach((el) => {
@@ -156,11 +155,7 @@ document.addEventListener('click', (e) => {
 });
 
 document.addEventListener('keydown', (e) => {
-  if (
-    e.key === 'Escape' &&
-    root.dataset.sidebar === 'open' &&
-    !isDesktop()
-  ) {
+  if (e.key === 'Escape' && root.dataset.sidebar === 'open' && !isDesktop()) {
     setSidebar('closed');
     return;
   }
