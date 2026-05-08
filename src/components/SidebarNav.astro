@@ -31,7 +31,7 @@ const isActiveItem = (href: string) => pathname === href;
 const keyOf = (href: string) => href.replace(/^\//, '');
 ---
 
-<nav aria-label="Sections" class="text-sm">
+<nav aria-label="Sections" class="text-md">
   <ul class="space-y-px">
     {sections.map((section) => {
       const key = keyOf(section.href);
@@ -55,8 +55,8 @@ const keyOf = (href: string) => href.replace(/^\//, '');
             data-folder-href={section.href}
           >
             <span class="folder-icon-btn relative flex items-center justify-center w-5 h-5 shrink-0 text-fg-muted group-hover:text-fg-strong transition-colors">
-              <Folder size={14} strokeWidth={1.5} class="folder-closed absolute" />
-              <FolderOpen size={14} strokeWidth={1.5} class="folder-open absolute" />
+              <Folder size={15} strokeWidth={1.5} class="folder-closed absolute" />
+              <FolderOpen size={15} strokeWidth={1.5} class="folder-open absolute" />
             </span>
             <span class="truncate">{section.label}</span>
           </button>
@@ -79,7 +79,7 @@ const keyOf = (href: string) => href.replace(/^\//, '');
                       ]}
                     >
                       <span class="flex items-center justify-center w-5 h-5 shrink-0">
-                        <FileText size={12} strokeWidth={1.5} />
+                        <FileText size={13} strokeWidth={1.5} />
                       </span>
                       <span class="truncate">{item.label}</span>
                     </a>
@@ -93,7 +93,7 @@ const keyOf = (href: string) => href.replace(/^\//, '');
                     class="flex items-center gap-1 pl-5 pr-1.5 py-0.5 rounded text-fg-muted hover:text-fg hover:bg-surface-hover transition-colors"
                   >
                     <span class="flex items-center justify-center w-5 h-5 shrink-0">
-                      <ArrowUpRight size={12} strokeWidth={1.5} />
+                      <ArrowUpRight size={13} strokeWidth={1.5} />
                     </span>
                     <span class="truncate">
                       {items.length === 0 ? `Open ${section.label.toLowerCase()}` : `View all ${section.label.toLowerCase()}`}

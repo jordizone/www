@@ -14,7 +14,6 @@ const prefersReducedMotion = () =>
 
 const $sidebar = () => document.getElementById('sidebar');
 const $backdrop = () => document.getElementById('sidebar-backdrop');
-const $main = () => document.getElementById('main-column');
 const $toggle = () => document.getElementById('sidebar-toggle');
 
 function syncToggleAria(state: State) {
@@ -37,7 +36,6 @@ function setSidebar(state: State, animateIt = true) {
 
   const sidebar = $sidebar();
   const backdrop = $backdrop();
-  const main = $main();
 
   if (sidebar) {
     animate(
@@ -48,9 +46,6 @@ function setSidebar(state: State, animateIt = true) {
   }
   if (backdrop && !desktop) {
     animate(backdrop, { opacity: isOpen ? 1 : 0 }, { duration: 0.2 });
-  }
-  if (main && desktop) {
-    animate(main, { paddingLeft: isOpen ? '220px' : '0px' }, opts);
   }
 }
 
