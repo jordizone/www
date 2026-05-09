@@ -1,8 +1,38 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const entries = (await getCollection('projects')).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+
+const formatDate = (date: Date) =>
+  date.toLocaleDateString('en-GB', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
 ---
 
 <BaseLayout title="Projects · Jordi Capellades" description="Things Jordi has built.">
   <h1 class="text-3xl text-fg-strong mb-8">Projects</h1>
-  <p class="text-fg">Nothing here yet — coming soon.</p>
+  {entries.length === 0 ? (
+    <p class="text-fg">Nothing here yet — coming soon.</p>
+  ) : (
+    <ul class="space-y-2">
+      {entries.map((entry) => (
+        <li>
+          <a
+            href={`/projects/${entry.id}`}
+            class="group flex items-baseline justify-between gap-4 text-sm text-fg hover:text-fg-strong transition-colors"
+          >
+            <span>{entry.data.title}</span>
+            <span class="font-mono text-xs text-fg-muted group-hover:text-fg transition-colors">
+              {formatDate(entry.data.pubDate)}
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  )}
 </BaseLayout>

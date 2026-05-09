@@ -1,47 +1,23 @@
-import { animate } from 'motion';
-
 type State = 'open' | 'closed';
 
-const DURATION = 0.3;
-const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 const EXPANDED_KEY = 'sidebar:expanded';
 
 const root = document.documentElement;
 
 const isDesktop = () => window.matchMedia('(min-width: 768px)').matches;
-const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-const $sidebar = () => document.getElementById('sidebar');
-const $backdrop = () => document.getElementById('sidebar-backdrop');
 const $toggle = () => document.getElementById('sidebar-toggle');
 
 function syncToggleAria(state: State) {
   $toggle()?.setAttribute('aria-expanded', String(state === 'open'));
 }
 
-function setSidebar(state: State, animateIt = true) {
-  const previous = root.dataset.sidebar as State | undefined;
+function setSidebar(state: State) {
   root.dataset.sidebar = state;
   try {
     localStorage.setItem('sidebar', state);
   } catch {}
   syncToggleAria(state);
-
-  if (!animateIt || previous === state || prefersReducedMotion()) return;
-
-  const isOpen = state === 'open';
-  const desktop = isDesktop();
-  const opts = { duration: DURATION, ease: EASE };
-
-  const sidebar = $sidebar();
-  const backdrop = $backdrop();
-
-  if (sidebar) {
-    animate(sidebar, { transform: isOpen ? 'translateX(0%)' : 'translateX(-100%)' }, opts);
-  }
-  if (backdrop && !desktop) {
-    animate(backdrop, { opacity: isOpen ? 1 : 0 }, { duration: 0.2 });
-  }
 }
 
 function readExpanded(): Record<string, boolean> {
@@ -136,6 +112,11 @@ document.addEventListener('click', (e) => {
   }
 
   if (target.closest('#sidebar-backdrop')) {
+    setSidebar('closed');
+    return;
+  }
+
+  if (target.closest('#sidebar a[href]') && !isDesktop()) {
     setSidebar('closed');
     return;
   }

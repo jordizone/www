@@ -10,7 +10,7 @@ export type SocialLink = {
 
 export const sections: NavSection[] = [
   { label: 'Writing', href: '/writing' },
-  { label: 'Projects', href: '/projects' },
+  // { label: 'Projects', href: '/projects' },
   { label: 'Lab', href: '/lab' },
   //{ label: "Photos", href: "/photos" },
 ];

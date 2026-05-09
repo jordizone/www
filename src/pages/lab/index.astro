@@ -1,8 +1,43 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const entries = (await getCollection("lab")).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+
+const formatDate = (date: Date) =>
+  date.toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
 ---
 
-<BaseLayout title="Lab · Jordi Capellades" description="UI/UX experiments and components.">
-  <h1 class="text-3xl text-fg-strong mb-8">Lab</h1>
-  <p class="text-fg">Nothing here yet — coming soon.</p>
+<BaseLayout
+  title="Lab · Jordi Capellades"
+  description="UI/UX experiments and components."
+>
+  <h1 class="text-3xl text-fg-strong mb-8 font-serif">Lab</h1>
+  {
+    entries.length === 0 ? (
+      <p class="text-fg">Nothing here yet — coming soon.</p>
+    ) : (
+      <ul class="space-y-2">
+        {entries.map((entry) => (
+          <li>
+            <a
+              href={`/lab/${entry.id}`}
+              class="group flex items-baseline justify-between gap-4 text-sm text-fg hover:text-fg-strong transition-colors"
+            >
+              <span>{entry.data.title}</span>
+              <span class="font-mono text-fg-muted group-hover:text-fg transition-colors">
+                {formatDate(entry.data.pubDate)}
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    )
+  }
 </BaseLayout>
