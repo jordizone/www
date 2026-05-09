@@ -1,0 +1,99 @@
+---
+import { Check, Copy, FileText } from "@lucide/astro";
+import { Folder } from "../ui/Folder";
+import folderSource from "../ui/Folder.tsx?raw";
+---
+
+<div class="not-prose my-6 rounded-md border border-border bg-bg p-4">
+  <div class="mb-3 flex items-center justify-end">
+    <button
+      type="button"
+      data-copy-folder
+      data-source={folderSource}
+      data-copied="false"
+      aria-label="Copy code"
+      class="copy-btn group relative inline-flex items-center justify-center w-7 h-7 rounded border border-border text-fg-muted hover:text-fg-strong hover:border-fg-muted transition-colors cursor-pointer"
+    >
+      <Copy
+        size={14}
+        stroke-width={1.75}
+        class="copy-icon-copy absolute transition-[opacity,transform] duration-200 ease-out"
+      />
+      <Check
+        size={14}
+        stroke-width={2}
+        class="copy-icon-check absolute text-fg-strong transition-[opacity,transform] duration-200 ease-out"
+      />
+    </button>
+  </div>
+
+  <div class="h-64 flex items-start justify-center overflow-hidden pt-12">
+    <div class="w-56">
+      <Folder label="Lab notes" client:load>
+        <ul class="space-y-px">
+          <li class="flex items-center gap-1.5 px-1.5 py-1 text-fg-muted">
+            <FileText size={17} stroke-width={1.5} />
+            <span>Folder sidebar</span>
+          </li>
+          <li class="flex items-center gap-1.5 px-1.5 py-1 text-fg-muted">
+            <FileText size={17} stroke-width={1.5} />
+            <span>Centered main</span>
+          </li>
+          <li class="flex items-center gap-1.5 px-1.5 py-1 text-fg-muted">
+            <FileText size={17} stroke-width={1.5} />
+            <span>Stagger reveal</span>
+          </li>
+        </ul>
+      </Folder>
+    </div>
+  </div>
+</div>
+
+<style>
+  .copy-icon-copy {
+    opacity: 1;
+    transform: scale(1);
+  }
+  .copy-icon-check {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  [data-copied="true"] .copy-icon-copy {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  [data-copied="true"] .copy-icon-check {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .copy-icon-copy,
+    .copy-icon-check {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  document
+    .querySelectorAll<HTMLButtonElement>("[data-copy-folder]")
+    .forEach((btn) => {
+      let timer: number | undefined;
+      btn.addEventListener("click", async () => {
+        const source = btn.dataset.source ?? "";
+        try {
+          await navigator.clipboard.writeText(source);
+          btn.dataset.copied = "true";
+          btn.setAttribute("aria-label", "Copied");
+          if (timer) window.clearTimeout(timer);
+          timer = window.setTimeout(() => {
+            btn.dataset.copied = "false";
+            btn.setAttribute("aria-label", "Copy code");
+          }, 1000);
+        } catch {
+          btn.setAttribute("aria-label", "Copy failed");
+        }
+      });
+    });
+</script>
