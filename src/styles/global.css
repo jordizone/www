@@ -4,6 +4,7 @@
     --font-sans: "Inter", sans-serif;
     --font-serif: "EB Garamond", serif;
     --font-mono: "Geist Mono", monospace;
+    --font-numeric: "JetBrains Mono", monospace;
 
     --color-bg: #ffffff;
     --color-fg: #656565;
@@ -22,6 +23,56 @@
 
 html {
     font-size: 14px;
+}
+
+/* squircle corners site-wide; no-op where there's no border-radius */
+* {
+    corner-shape: squircle;
+}
+
+/* full circles (dots, avatars) should stay truly round, not squircle */
+.rounded-full {
+    corner-shape: round;
+}
+
+/* layered soft shadow — depth without heavier borders */
+.card-shadow {
+    box-shadow:
+        0 1px 2px rgb(0 0 0 / 0.04),
+        0 4px 12px rgb(0 0 0 / 0.04);
+}
+
+/* staggered entrance for bento cells on first load */
+@keyframes bento-in {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+}
+
+.bento > * {
+    animation: bento-in 0.4s cubic-bezier(0.2, 0, 0, 1) backwards;
+}
+
+.bento > :nth-child(2) { animation-delay: 60ms; }
+.bento > :nth-child(3) { animation-delay: 120ms; }
+.bento > :nth-child(4) { animation-delay: 180ms; }
+.bento > :nth-child(5) { animation-delay: 240ms; }
+.bento > :nth-child(6) { animation-delay: 300ms; }
+.bento > :nth-child(7) { animation-delay: 360ms; }
+.bento > :nth-child(8) { animation-delay: 420ms; }
+
+/* reduced motion: keep the fade, drop the movement */
+@keyframes bento-fade {
+    from {
+        opacity: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .bento > * {
+        animation-name: bento-fade;
+    }
 }
 
 html, body {

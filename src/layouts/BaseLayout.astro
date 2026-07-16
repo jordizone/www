@@ -4,9 +4,10 @@ import '../styles/global.css';
 interface Props {
   title: string;
   description?: string;
+  wide?: boolean;
 }
 
-const { title, description } = Astro.props;
+const { title, description, wide = false } = Astro.props;
 ---
 
 <html lang="en">
@@ -21,30 +22,12 @@ const { title, description } = Astro.props;
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400..700&display=swap" rel="stylesheet" />
     <title>{title}</title>
   </head>
   <body class="min-h-screen flex flex-col antialiased">
-    <header class="w-full">
-      <nav aria-label="Primary" class="flex items-baseline justify-end py-4 px-6">
-        <div class="space-x-4">
-          <span id="cet-clock" aria-live="off" class="font-mono text-sm text-fg-muted"></span>
-        </div>
-      </nav>
-    </header>
-    <main class="flex-1 w-full mx-auto max-w-content px-6 mt-60 pb-12">
+    <main class:list={["flex-1 w-full mx-auto px-6 pb-12", wide ? "max-w-4xl mt-24" : "max-w-content mt-60"]}>
       <slot />
     </main>
-    <script is:inline>
-      function updateClock() {
-        const now = new Date();
-        const time = now.toLocaleTimeString('en-GB', { timeZone: 'Europe/Berlin', hour: '2-digit', minute: '2-digit' });
-        const clockElement = document.getElementById('cet-clock');
-        if (clockElement) {
-          clockElement.textContent = time + ' CET';
-        }
-      }
-      updateClock();
-      setInterval(updateClock, 1000);
-    </script>
   </body>
 </html>
