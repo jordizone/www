@@ -62,6 +62,49 @@ html {
 .bento > :nth-child(7) { animation-delay: 360ms; }
 .bento > :nth-child(8) { animation-delay: 420ms; }
 
+/* heatmap cells pop in one by one; per-cell delay set inline via --d */
+@keyframes heatmap-in {
+    from {
+        opacity: 0;
+        transform: scale(0.4);
+    }
+}
+
+.heatmap-cell {
+    animation: heatmap-in 0.3s cubic-bezier(0.2, 0, 0, 1) backwards;
+    animation-delay: calc(var(--d) + var(--base, 0ms));
+}
+
+/* content inside cards rises in line by line; order set inline via --i */
+@keyframes rise-in {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+        filter: blur(4px);
+    }
+}
+
+/* --base is set per card so inner content starts after its cell has landed */
+.stagger-item {
+    animation: rise-in 0.35s cubic-bezier(0.2, 0, 0, 1) backwards;
+    animation-delay: calc(var(--i) * 90ms + var(--base, 150ms));
+}
+
+/* weather data popping in once fetched (icon revealed / class added by JS) */
+@keyframes weather-in {
+    from {
+        opacity: 0;
+        scale: 0.25;
+        filter: blur(4px);
+    }
+}
+
+.weather-in {
+    /* inline-block so scale applies to the text spans */
+    display: inline-block;
+    animation: weather-in 0.3s cubic-bezier(0.2, 0, 0, 1) backwards;
+}
+
 /* reduced motion: keep the fade, drop the movement */
 @keyframes bento-fade {
     from {
@@ -70,7 +113,10 @@ html {
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .bento > * {
+    .bento > *,
+    .heatmap-cell,
+    .stagger-item,
+    .weather-in {
         animation-name: bento-fade;
     }
 }

@@ -1,15 +1,21 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { Sun, Cloud, CloudFog, CloudRain, Snowflake, CloudLightning } from '@lucide/astro';
+import DitherPortrait from '../components/DitherPortrait';
+import SunFill from 'phosphor-astro/SunFill.astro';
+import CloudFill from 'phosphor-astro/CloudFill.astro';
+import CloudFogFill from 'phosphor-astro/CloudFogFill.astro';
+import CloudRainFill from 'phosphor-astro/CloudRainFill.astro';
+import SnowflakeFill from 'phosphor-astro/SnowflakeFill.astro';
+import CloudLightningFill from 'phosphor-astro/CloudLightningFill.astro';
 
 // all rendered hidden; the inline script reveals the one matching the WMO bucket
 const weatherIcons = [
-  ['sunny', Sun],
-  ['cloudy', Cloud],
-  ['foggy', CloudFog],
-  ['rainy', CloudRain],
-  ['snowy', Snowflake],
-  ['stormy', CloudLightning],
+  ['sunny', SunFill],
+  ['cloudy', CloudFill],
+  ['foggy', CloudFogFill],
+  ['rainy', CloudRainFill],
+  ['snowy', SnowflakeFill],
+  ['stormy', CloudLightningFill],
 ] as const;
 
 // ponytail: empty bento sketch — cells are labeled placeholders, fill one at a time
@@ -51,10 +57,17 @@ try {
 
 <BaseLayout title="Jordi Capellades" description="Personal site of Jordi Capellades — web developer." wide>
   <h1 class="sr-only">Jordi Capellades</h1>
-  <div class="bento grid grid-cols-2 md:grid-cols-4 auto-rows-[12rem] gap-4">
+  <div class="bento grid grid-cols-2 md:grid-cols-4 auto-rows-[minmax(12rem,auto)] gap-4">
     <div class="col-span-2 md:row-span-2 flex flex-col justify-between gap-8 rounded-2xl p-6 overflow-hidden">
-      <img src="/dithering-profile.png" alt="Dithered portrait of Jordi" class="w-44 h-44 object-cover rounded-full outline outline-1 -outline-offset-1 outline-black/5" style="corner-shape: squircle" />
-      <p class="text-fg text-pretty">
+      <div
+        role="img"
+        aria-label="Dithered portrait of Jordi"
+        class="stagger-item w-44 h-44 overflow-hidden rounded-full bg-[#0039F6] outline outline-1 -outline-offset-1 outline-black/5"
+        style="corner-shape: squircle; --i:0"
+      >
+        <DitherPortrait client:idle />
+      </div>
+      <p class="stagger-item text-fg text-pretty" style="--i:1">
         <span class="text-fg-emphasis font-medium">I'm Jordi</span>, a web developer. This is where I
         keep what I'm thinking about, what I'm building, and what I've seen. A small corner of the
         internet that's mine.
@@ -66,11 +79,12 @@ try {
           <a
             href="https://github.com/jordizone"
             class:list={[
-              'card-shadow flex flex-col gap-3 rounded-2xl border border-border p-4 transition-[border-color,color,scale] duration-150 hover:border-border-strong active:scale-[0.98]',
+              'card-shadow flex flex-col gap-3 rounded-2xl border border-border p-4 transition-[border-color,color,scale] duration-150 ease-out hover:border-border-strong active:scale-[0.96]',
               cell.span,
             ]}
+            style="--base:260ms"
           >
-            <div class="flex items-center justify-between gap-2">
+            <div class="stagger-item flex items-center justify-between gap-2" style="--i:0">
               <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" class="shrink-0 text-fg-strong" aria-hidden="true">
                 <path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z" />
               </svg>
@@ -78,40 +92,54 @@ try {
                 <span class="font-numeric font-medium text-fg-emphasis">{gh.total}</span> in {year}
               </p>
             </div>
-            <div class="grid flex-1 grid-cols-26 grid-rows-7 gap-[3px]">
-              {gh.days.map((day) => (
-                <div class="rounded-[2px]" style={`background:${GH_LEVELS[day.level]}`} title={`${day.count} on ${day.date}`} />
-              ))}
+            <div class="grid flex-1 content-center grid-cols-26 gap-[3px]">
+              {gh.days.map((day, i) => {
+                // column-by-column sweep: delay follows column-major order
+                const colDelay = ((i % 26) * 7 + Math.floor(i / 26)) * 6;
+                return (
+                  <div
+                    class="heatmap-cell aspect-square rounded-[2px]"
+                    style={`background:${GH_LEVELS[day.level]};--d:${colDelay}ms`}
+                    title={`${day.count} on ${day.date}`}
+                  />
+                );
+              })}
             </div>
           </a>
         ) : cell.clock ? (
-          <div class="card-shadow flex items-center rounded-2xl bg-neutral-900 p-4">
+          <div class="card-shadow flex items-center rounded-2xl bg-neutral-900 p-4" style="--base:320ms">
             <p class="text-2xl font-semibold leading-snug text-neutral-500">
-              <span id="clock" class="font-numeric text-white tabular-nums">{initialTime}</span> now<br />
-              in <span class="text-white">Barcelona</span><br />
-              feels <span id="temp" class="font-numeric text-white tabular-nums">–</span><br />
-              <span class="whitespace-nowrap">
+              <span class="stagger-item block" style="--i:0">
+                <span id="clock" class="font-numeric text-white tabular-nums">{initialTime}</span> now
+              </span>
+              <span class="stagger-item block" style="--i:1">
+                in <span class="text-white">Barcelona</span>
+              </span>
+              <span class="stagger-item block" style="--i:2">
+                feels <span id="temp" class="font-numeric text-white tabular-nums">–</span>
+              </span>
+              <span class="stagger-item block whitespace-nowrap" style="--i:3">
                 {weatherIcons.map(([word, Icon]) => (
-                  <Icon data-cond={word} size={20} class="align-[-2px]" style="display:none" aria-hidden="true" />
+                  <Icon data-cond={word} width={20} height={20} class="weather-in align-[-2px]" style="display:none" aria-hidden="true" />
                 ))}{' '}
                 <span id="cond" class="text-white"></span>
               </span>
             </p>
           </div>
         ) : cell.today ? (
-          <div class="card-shadow flex flex-col rounded-2xl bg-amber-400 p-1.5">
+          <div class="card-shadow flex flex-col rounded-2xl bg-amber-400 p-1.5" style="--base:380ms">
             <div class="flex flex-1 flex-col gap-2 rounded-[10px] bg-white p-3 shadow-sm">
-              <p class="text-sm font-medium text-fg-emphasis">Now</p>
+              <p class="stagger-item text-sm font-medium text-fg-emphasis" style="--i:0">Now</p>
               <ul class="flex flex-1 flex-col justify-around gap-1.5">
-                {todayItems.map((item) => (
-                  <li class="flex items-start gap-2 text-xs text-fg">
-                    <span class="mt-[5px] h-1.5 w-1.5 shrink-0 rounded-full bg-amber-400" aria-hidden="true" />
+                {todayItems.map((item, i) => (
+                  <li class="stagger-item flex items-start gap-2 text-xs text-fg" style={`--i:${i + 1}`}>
+                    <span class="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-400" aria-hidden="true" />
                     {item}
                   </li>
                 ))}
               </ul>
             </div>
-            <p class="px-2 pt-1 font-mono text-[10px] text-amber-800">now.md</p>
+            <p class="stagger-item px-2 pt-1 font-mono text-[10px] text-amber-800" style="--i:4">now.md</p>
           </div>
         ) : null
       )
@@ -136,10 +164,14 @@ try {
       fetch('https://api.open-meteo.com/v1/forecast?latitude=41.39&longitude=2.17&current=temperature_2m,weather_code')
         .then((r) => r.json())
         .then(({ current }) => {
-          document.getElementById('temp').textContent = Math.round(current.temperature_2m) + '°';
+          const temp = document.getElementById('temp');
+          temp.textContent = Math.round(current.temperature_2m) + '°';
+          temp.classList.add('weather-in'); // icon animates via display toggle; text spans need the class added
           const word = wmo(current.weather_code);
           document.querySelector(`[data-cond="${word}"]`).style.display = 'inline';
-          document.getElementById('cond').textContent = word;
+          const cond = document.getElementById('cond');
+          cond.textContent = word;
+          cond.classList.add('weather-in');
         })
         .catch(() => {}); // card still shows the time if the fetch fails
     })();
