@@ -26,7 +26,7 @@ const { title, description, wide = false } = Astro.props;
     <title>{title}</title>
   </head>
   <body class="min-h-screen flex flex-col antialiased">
-    <main class:list={["flex-1 w-full mx-auto px-6 pb-12", wide ? "max-w-4xl mt-24" : "max-w-content mt-60"]}>
+    <main class:list={["flex-1 w-full mx-auto px-6 pb-12", wide ? "max-w-4xl flex flex-col justify-center py-12" : "max-w-content mt-60"]}>
       <slot />
     </main>
   </body>

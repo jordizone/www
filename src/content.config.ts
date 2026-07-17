@@ -8,7 +8,19 @@ const blog = defineCollection({
     description: z.string(),
     pubDate: z.coerce.date(),
     updatedDate: z.coerce.date().optional(),
+    draft: z.boolean().default(false),
   }),
 });
 
-export const collections = { blog };
+const feed = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/feed' }),
+  schema: z.object({
+    type: z.enum(['post']).default('post'), // room for 'book' | 'film' | 'component' later
+    text: z.string(),
+    date: z.coerce.date(),
+    url: z.string().url().optional(),
+    draft: z.boolean().default(false),
+  }),
+});
+
+export const collections = { blog, feed };

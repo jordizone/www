@@ -1,6 +1,8 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import DitherPortrait from '../components/DitherPortrait';
+import ChatCircleFill from 'phosphor-astro/ChatCircleFill.astro';
 import SunFill from 'phosphor-astro/SunFill.astro';
 import CloudFill from 'phosphor-astro/CloudFill.astro';
 import CloudFogFill from 'phosphor-astro/CloudFogFill.astro';
@@ -53,6 +55,12 @@ try {
 } catch {
   // build without the cell rather than failing the build
 }
+
+const feed = (await getCollection('feed', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+const formatDate = (date: Date) =>
+  date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 ---
 
 <BaseLayout title="Jordi Capellades" description="Personal site of Jordi Capellades — web developer." wide>
@@ -145,6 +153,32 @@ try {
       )
     }
   </div>
+  {feed.length > 0 && (
+  <section class="mt-16">
+    <h2 class="mb-4 text-sm font-medium text-fg-emphasis">Feed</h2>
+    <ul class="flex flex-col gap-4">
+      {
+        feed.map((item, i) => {
+          const Row = item.data.url ? 'a' : 'div';
+          return (
+            <li class="stagger-item" style={`--i:${i}; --base:500ms`}>
+              <Row
+                {...(item.data.url && { href: item.data.url })}
+                class="card-shadow flex items-center gap-3 rounded-2xl border border-border p-4 transition-[border-color] hover:border-border-strong"
+              >
+                <ChatCircleFill width={16} height={16} class="shrink-0 text-fg-strong" aria-hidden="true" />
+                <p class="flex-1 text-sm text-fg text-pretty">{item.data.text}</p>
+                <time class="font-mono text-xs text-fg-muted whitespace-nowrap" datetime={item.data.date.toISOString()}>
+                  {formatDate(item.data.date)}
+                </time>
+              </Row>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </section>
+  )}
   <script is:inline>
     (() => {
       const tz = 'Europe/Madrid';
