@@ -24,6 +24,7 @@ pnpm-debug.log*
 .idea/
 
 # local AI tooling
-.claude/
 .agents/
+.claude/
+.playwright-cli/
 skills-lock.json

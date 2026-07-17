@@ -1,15 +1,13 @@
 ---
-import "../styles/global.css";
-import { ClientRouter } from "astro:transitions";
-import { PanelLeft } from "@lucide/astro";
-import Sidebar from "../components/Sidebar.astro";
+import '../styles/global.css';
 
 interface Props {
   title: string;
   description?: string;
+  wide?: boolean;
 }
 
-const { title, description } = Astro.props;
+const { title, description, wide = false } = Astro.props;
 ---
 
 <html lang="en">
@@ -19,63 +17,17 @@ const { title, description } = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     {description && <meta name="description" content={description} />}
-    <ClientRouter />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400..700&display=swap" rel="stylesheet" />
     <title>{title}</title>
-    <script is:inline>
-      (function () {
-        var stored = null;
-        try {
-          stored = localStorage.getItem("sidebar");
-        } catch (e) {}
-        var initial = stored;
-        if (initial !== "open" && initial !== "closed") {
-          initial = window.matchMedia("(min-width: 768px)").matches
-            ? "open"
-            : "closed";
-        }
-        document.documentElement.dataset.sidebar = initial;
-      })();
-    </script>
   </head>
-  <body class="min-h-screen antialiased">
-    <Sidebar />
-    <div id="main-column" class="min-w-0 flex flex-col min-h-screen">
-      <header class="w-full">
-        <nav
-          aria-label="Primary"
-          class="flex items-baseline justify-between py-4 px-6"
-        >
-          <button
-            type="button"
-            id="sidebar-toggle"
-            aria-label="Toggle sidebar"
-            aria-controls="sidebar"
-            class="text-fg-muted hover:text-fg-strong transition-colors md:hidden"
-          >
-            <PanelLeft size={18} stroke-width={1.5} />
-          </button>
-        </nav>
-      </header>
-      <main class="flex-1 w-full mx-auto max-w-content px-6 mt-60 pb-12">
-        <slot />
-      </main>
-    </div>
-    <script>
-      import "../scripts/sidebar.ts";
-    </script>
+  <body class="min-h-screen flex flex-col antialiased">
+    <main class:list={["flex-1 w-full mx-auto px-6 pb-12", wide ? "max-w-4xl flex flex-col justify-center py-12" : "max-w-content mt-60"]}>
+      <slot />
+    </main>
   </body>
 </html>

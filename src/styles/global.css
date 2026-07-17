@@ -4,6 +4,7 @@
     --font-sans: "Inter", sans-serif;
     --font-serif: "EB Garamond", serif;
     --font-mono: "Geist Mono", monospace;
+    --font-numeric: "JetBrains Mono", monospace;
 
     --color-bg: #ffffff;
     --color-fg: #656565;
@@ -21,8 +22,103 @@
 }
 
 html {
-    font-size: 16px;
-    scrollbar-gutter: stable;
+    font-size: 14px;
+}
+
+/* squircle corners site-wide; no-op where there's no border-radius */
+* {
+    corner-shape: squircle;
+}
+
+/* full circles (dots, avatars) should stay truly round, not squircle */
+.rounded-full {
+    corner-shape: round;
+}
+
+/* layered soft shadow — depth without heavier borders */
+.card-shadow {
+    box-shadow:
+        0 1px 2px rgb(0 0 0 / 0.04),
+        0 4px 12px rgb(0 0 0 / 0.04);
+}
+
+/* staggered entrance for bento cells on first load */
+@keyframes bento-in {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+}
+
+.bento > * {
+    animation: bento-in 0.4s cubic-bezier(0.2, 0, 0, 1) backwards;
+}
+
+.bento > :nth-child(2) { animation-delay: 60ms; }
+.bento > :nth-child(3) { animation-delay: 120ms; }
+.bento > :nth-child(4) { animation-delay: 180ms; }
+.bento > :nth-child(5) { animation-delay: 240ms; }
+.bento > :nth-child(6) { animation-delay: 300ms; }
+.bento > :nth-child(7) { animation-delay: 360ms; }
+.bento > :nth-child(8) { animation-delay: 420ms; }
+
+/* heatmap cells pop in one by one; per-cell delay set inline via --d */
+@keyframes heatmap-in {
+    from {
+        opacity: 0;
+        transform: scale(0.4);
+    }
+}
+
+.heatmap-cell {
+    animation: heatmap-in 0.3s cubic-bezier(0.2, 0, 0, 1) backwards;
+    animation-delay: calc(var(--d) + var(--base, 0ms));
+}
+
+/* content inside cards rises in line by line; order set inline via --i */
+@keyframes rise-in {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+        filter: blur(4px);
+    }
+}
+
+/* --base is set per card so inner content starts after its cell has landed */
+.stagger-item {
+    animation: rise-in 0.35s cubic-bezier(0.2, 0, 0, 1) backwards;
+    animation-delay: calc(var(--i) * 90ms + var(--base, 150ms));
+}
+
+/* weather data popping in once fetched (icon revealed / class added by JS) */
+@keyframes weather-in {
+    from {
+        opacity: 0;
+        scale: 0.25;
+        filter: blur(4px);
+    }
+}
+
+.weather-in {
+    /* inline-block so scale applies to the text spans */
+    display: inline-block;
+    animation: weather-in 0.3s cubic-bezier(0.2, 0, 0, 1) backwards;
+}
+
+/* reduced motion: keep the fade, drop the movement */
+@keyframes bento-fade {
+    from {
+        opacity: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .bento > *,
+    .heatmap-cell,
+    .stagger-item,
+    .weather-in {
+        animation-name: bento-fade;
+    }
 }
 
 html, body {
@@ -49,101 +145,3 @@ html, body {
 .prose-content pre { background: var(--color-surface-hover); padding: 1rem; border-radius: var(--radius-md); overflow-x: auto; }
 .prose-content pre code { background: transparent; padding: 0; }
 .prose-content blockquote { border-left: 2px solid var(--color-border); padding-left: 1rem; color: var(--color-fg-muted); }
-
-#sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    z-index: 40;
-    width: 300px;
-    background: var(--color-bg);
-}
-
-@media (prefers-reduced-motion: reduce) {
-    ::view-transition-group(*),
-    ::view-transition-old(*),
-    ::view-transition-new(*) {
-        animation: none !important;
-    }
-}
-@media (min-width: 768px) {
-    #sidebar { width: 260px; }
-}
-#sidebar { transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
-html[data-sidebar="closed"] #sidebar { transform: translateX(-100%); }
-html[data-sidebar="open"] #sidebar { transform: translateX(0); }
-
-@media (prefers-reduced-motion: reduce) {
-    #sidebar,
-    #sidebar-backdrop { transition: none; }
-}
-
-@media (max-width: 767px) {
-    html[data-sidebar="open"],
-    html[data-sidebar="open"] body { overflow: hidden; }
-}
-
-#sidebar-backdrop {
-    position: fixed;
-    inset: 0;
-    z-index: 30;
-    background: rgb(0 0 0 / 0.2);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s ease;
-}
-html[data-sidebar="open"] #sidebar-backdrop { opacity: 1; pointer-events: auto; }
-@media (min-width: 768px) {
-    #sidebar-backdrop { display: none; }
-}
-
-.folder-icon-btn .folder-closed,
-.folder-icon-btn .folder-open {
-    transition:
-        opacity 160ms ease-out,
-        transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
-    transform-origin: 25% 75%;
-}
-html.nav-swapping #sidebar *,
-html.nav-swapping .sidebar-children-wrap,
-html.nav-swapping .folder-icon-btn .folder-closed,
-html.nav-swapping .folder-icon-btn .folder-open {
-    transition: none !important;
-    animation: none !important;
-}
-[data-disclosure][aria-expanded="false"] .folder-closed { opacity: 1; transform: rotate(0deg) scale(1); }
-[data-disclosure][aria-expanded="false"] .folder-open   { opacity: 0; transform: rotate(-8deg) scale(0.92); }
-[data-disclosure][aria-expanded="true"]  .folder-closed { opacity: 0; transform: rotate(8deg) scale(0.92); }
-[data-disclosure][aria-expanded="true"]  .folder-open   { opacity: 1; transform: rotate(0deg) scale(1); }
-
-[data-disclosure],
-.sidebar-children a {
-    transition: transform 120ms ease-out, background-color 150ms ease, color 150ms ease;
-}
-[data-disclosure]:active,
-.sidebar-children a:active {
-    transform: scale(0.98);
-}
-
-.sidebar-children-wrap {
-    display: grid;
-    grid-template-rows: 0fr;
-    transition: grid-template-rows 200ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-[data-expanded="true"] > .sidebar-children-wrap {
-    grid-template-rows: 1fr;
-}
-.sidebar-children-wrap > ul {
-    overflow: hidden;
-    min-height: 0;
-}
-@media (prefers-reduced-motion: reduce) {
-    .folder-icon-btn .folder-closed,
-    .folder-icon-btn .folder-open,
-    .sidebar-children-wrap {
-        transition: none;
-    }
-}
-
-#main-column { padding-left: 0; }

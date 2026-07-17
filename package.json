@@ -9,28 +9,22 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro",
-    "format": "biome format --write .",
-    "format:check": "biome format .",
-    "lint": "biome lint .",
-    "check": "biome check --write ."
+    "astro": "astro"
   },
   "dependencies": {
     "@astrojs/mdx": "^5.0.3",
-    "@astrojs/react": "^5.0.4",
+    "@astrojs/react": "^6.0.1",
+    "@keystatic/astro": "^5.2.0",
+    "@keystatic/core": "^0.5.51",
     "@lucide/astro": "^1.7.0",
+    "@paper-design/shaders-react": "^0.0.77",
     "@tailwindcss/vite": "^4.2.2",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
     "astro": "^6.1.4",
-    "clsx": "^2.1.1",
-    "lucide-react": "^1.14.0",
-    "motion": "^12.38.0",
-    "react": "^19.2.6",
-    "react-dom": "^19.2.6",
+    "phosphor-astro": "^2.1.0",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
     "tailwindcss": "^4.2.2"
-  },
-  "devDependencies": {
-    "@biomejs/biome": "2.4.14",
-    "@types/react": "^19.2.14",
-    "@types/react-dom": "^19.2.3"
   }
 }
