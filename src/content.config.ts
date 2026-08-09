@@ -23,4 +23,15 @@ const feed = defineCollection({
   }),
 });
 
-export const collections = { blog, feed };
+const travels = defineCollection({
+  loader: glob({ pattern: '**/*.mdx', base: './src/content/travels' }),
+  schema: z.object({
+    title: z.string(),
+    date: z.coerce.date(),
+    lat: z.number(),
+    lng: z.number(),
+    draft: z.boolean().default(false),
+  }),
+});
+
+export const collections = { blog, feed, travels };

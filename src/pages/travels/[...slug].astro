@@ -1,10 +1,11 @@
 ---
 import { getCollection, render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import Figure from "../../components/Figure.astro";
 import { Undo2 } from "@lucide/astro";
 
 export async function getStaticPaths() {
-  const posts = await getCollection("blog", ({ data }) => !data.draft);
+  const posts = await getCollection("travels", ({ data }) => !data.draft);
   return posts.map((post) => ({
     params: { slug: post.id },
     props: { post },
@@ -22,30 +23,25 @@ const formatDate = (date: Date) =>
   });
 ---
 
-<BaseLayout title={post.data.title} description={post.data.description}>
-  <article>
+<BaseLayout title={post.data.title}>
+  <article class="mt-96">
     <header class="mb-8">
       <div class="flex items-baseline justify-between mb-4">
         <a
-          href="/"
-          aria-label="Back to home"
+          href="/map"
+          aria-label="Back to map"
           class="text-fg-muted flex items-center gap-1 hover:text-fg-emphasis transition-colors"
         >
-          <Undo2 class="h-4" aria-hidden="true" />back
+          <Undo2 class="h-4" aria-hidden="true" />map
         </a>
         <p class="mt-2 font-mono text-sm text-fg-muted">
-          {formatDate(post.data.pubDate)}
-          {
-            post.data.updatedDate && (
-              <span> · updated {formatDate(post.data.updatedDate)}</span>
-            )
-          }
+          {formatDate(post.data.date)}
         </p>
       </div>
       <h1 class="font-serif text-5xl text-fg-strong">{post.data.title}</h1>
     </header>
     <div class="prose-content space-y-4 text-fg leading-relaxed">
-      <Content />
+      <Content components={{ Figure }} />
     </div>
   </article>
 </BaseLayout>

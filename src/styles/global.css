@@ -1,147 +1,104 @@
 @import "tailwindcss";
 
 @theme {
-    --font-sans: "Inter", sans-serif;
-    --font-serif: "EB Garamond", serif;
-    --font-mono: "Geist Mono", monospace;
-    --font-numeric: "JetBrains Mono", monospace;
+  --font-sans: "Inter", sans-serif;
+  --font-serif: "EB Garamond", serif;
+  --font-mono: "Geist Mono", monospace;
+  --font-numeric: "JetBrains Mono", monospace;
 
-    --color-bg: #ffffff;
-    --color-fg: #656565;
-    --color-fg-strong: #000000;
-    --color-fg-emphasis: #27272a;
-    --color-fg-muted: #949494;
-    --color-border: #dbdbdb;
-    --color-border-strong: #c5c5c5;
-    --color-surface-hover: #f5f5f5;
+  --color-primary: #0e0e0e;
 
-    --radius-sm: 6px;
-    --radius-md: 10px;
+  --color-bg: #ffffff;
+  --color-fg: #656565;
+  --color-fg-strong: #000000;
+  --color-fg-emphasis: #27272a;
+  --color-fg-muted: #949494;
+  --color-border: #dbdbdb;
+  --color-border-strong: #c5c5c5;
+  --color-surface-hover: #f5f5f5;
 
-    --container-content: 592px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+
+  --container-content: 592px;
 }
 
 html {
-    font-size: 14px;
+  font-size: 14px;
 }
 
-/* squircle corners site-wide; no-op where there's no border-radius */
 * {
-    corner-shape: squircle;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* full circles (dots, avatars) should stay truly round, not squircle */
-.rounded-full {
-    corner-shape: round;
-}
-
-/* layered soft shadow — depth without heavier borders */
-.card-shadow {
-    box-shadow:
-        0 1px 2px rgb(0 0 0 / 0.04),
-        0 4px 12px rgb(0 0 0 / 0.04);
-}
-
-/* staggered entrance for bento cells on first load */
-@keyframes bento-in {
-    from {
-        opacity: 0;
-        transform: translateY(8px);
-    }
-}
-
-.bento > * {
-    animation: bento-in 0.4s cubic-bezier(0.2, 0, 0, 1) backwards;
-}
-
-.bento > :nth-child(2) { animation-delay: 60ms; }
-.bento > :nth-child(3) { animation-delay: 120ms; }
-.bento > :nth-child(4) { animation-delay: 180ms; }
-.bento > :nth-child(5) { animation-delay: 240ms; }
-.bento > :nth-child(6) { animation-delay: 300ms; }
-.bento > :nth-child(7) { animation-delay: 360ms; }
-.bento > :nth-child(8) { animation-delay: 420ms; }
-
-/* heatmap cells pop in one by one; per-cell delay set inline via --d */
-@keyframes heatmap-in {
-    from {
-        opacity: 0;
-        transform: scale(0.4);
-    }
-}
-
-.heatmap-cell {
-    animation: heatmap-in 0.3s cubic-bezier(0.2, 0, 0, 1) backwards;
-    animation-delay: calc(var(--d) + var(--base, 0ms));
-}
-
-/* content inside cards rises in line by line; order set inline via --i */
-@keyframes rise-in {
-    from {
-        opacity: 0;
-        transform: translateY(6px);
-        filter: blur(4px);
-    }
-}
-
-/* --base is set per card so inner content starts after its cell has landed */
-.stagger-item {
-    animation: rise-in 0.35s cubic-bezier(0.2, 0, 0, 1) backwards;
-    animation-delay: calc(var(--i) * 90ms + var(--base, 150ms));
-}
-
-/* weather data popping in once fetched (icon revealed / class added by JS) */
-@keyframes weather-in {
-    from {
-        opacity: 0;
-        scale: 0.25;
-        filter: blur(4px);
-    }
-}
-
-.weather-in {
-    /* inline-block so scale applies to the text spans */
-    display: inline-block;
-    animation: weather-in 0.3s cubic-bezier(0.2, 0, 0, 1) backwards;
-}
-
-/* reduced motion: keep the fade, drop the movement */
-@keyframes bento-fade {
-    from {
-        opacity: 0;
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .bento > *,
-    .heatmap-cell,
-    .stagger-item,
-    .weather-in {
-        animation-name: bento-fade;
-    }
-}
-
-html, body {
-    background: var(--color-bg);
-    font-family: var(--font-sans);
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+html,
+body {
+  background: var(--color-bg);
+  color: var(--color-primary);
+  font-family: var(--font-sans);
 }
 
 :focus-visible {
-    outline: 2px solid var(--color-fg-strong);
-    outline-offset: 2px;
-    border-radius: var(--radius-sm);
+  outline: 2px solid var(--color-fg-strong);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
 }
 
-.prose-content h1 { color: var(--color-fg-strong); font-size: 1.5rem; margin-top: 1.5rem; font-weight: 500; }
-.prose-content h2 { color: var(--color-fg-strong); font-size: 1.25rem; margin-top: 1.5rem; font-weight: 500; }
-.prose-content h3 { color: var(--color-fg-strong); font-size: 1rem; font-weight: 500; margin-top: 1rem; }
-.prose-content a { color: var(--color-fg-strong); text-decoration: underline; }
-.prose-content strong { color: var(--color-fg-strong); font-weight: 600; }
-.prose-content ul { list-style: disc; padding-left: 1.25rem; }
-.prose-content ol { list-style: decimal; padding-left: 1.25rem; }
-.prose-content code { font-family: var(--font-mono); font-size: 0.875em; background: var(--color-surface-hover); padding: 0.125rem 0.375rem; border-radius: var(--radius-sm); }
-.prose-content pre { background: var(--color-surface-hover); padding: 1rem; border-radius: var(--radius-md); overflow-x: auto; }
-.prose-content pre code { background: transparent; padding: 0; }
-.prose-content blockquote { border-left: 2px solid var(--color-border); padding-left: 1rem; color: var(--color-fg-muted); }
+/* blog / markdown rendering */
+.prose-content h1 {
+  color: var(--color-fg-strong);
+  font-size: 1.5rem;
+  margin-top: 1.5rem;
+  font-weight: 500;
+}
+.prose-content h2 {
+  color: var(--color-fg-strong);
+  font-size: 1.25rem;
+  margin-top: 1.5rem;
+  font-weight: 500;
+}
+.prose-content h3 {
+  color: var(--color-fg-strong);
+  font-size: 1rem;
+  font-weight: 500;
+  margin-top: 1rem;
+}
+.prose-content a {
+  color: var(--color-fg-strong);
+  text-decoration: underline;
+}
+.prose-content strong {
+  color: var(--color-fg-strong);
+  font-weight: 600;
+}
+.prose-content ul {
+  list-style: disc;
+  padding-left: 1.25rem;
+}
+.prose-content ol {
+  list-style: decimal;
+  padding-left: 1.25rem;
+}
+.prose-content code {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  background: var(--color-surface-hover);
+  padding: 0.125rem 0.375rem;
+  border-radius: var(--radius-sm);
+}
+.prose-content pre {
+  background: var(--color-surface-hover);
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+}
+.prose-content pre code {
+  background: transparent;
+  padding: 0;
+}
+.prose-content blockquote {
+  border-left: 2px solid var(--color-border);
+  padding-left: 1rem;
+  color: var(--color-fg-muted);
+}

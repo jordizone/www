@@ -9,11 +9,13 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "fetch:vinyl": "node scripts/fetch-vinyl.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "^5.0.3",
     "@astrojs/react": "^6.0.1",
+    "@base-ui/react": "^1.7.0",
     "@keystatic/astro": "^5.2.0",
     "@keystatic/core": "^0.5.51",
     "@lucide/astro": "^1.7.0",
@@ -22,6 +24,7 @@
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "astro": "^6.1.4",
+    "motion": "^13.0.0",
     "phosphor-astro": "^2.1.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",

@@ -1,0 +1,27 @@
+---
+import PhotoStack from "./PhotoStack.tsx";
+
+// Single: <Figure src caption /> — Stack: <Figure photos={[{src,caption},...]} />
+const { src, caption, photos } = Astro.props;
+const items = (photos?.length ? photos : src ? [{ src, caption }] : []);
+---
+
+{
+  items.length > 1 ? (
+    <PhotoStack client:load photos={items} />
+  ) : (
+    <figure class="my-8 mx-auto w-fit bg-white p-3 pb-4 rounded-sm shadow-md -rotate-1 select-none">
+      <img
+        src={items[0].src}
+        alt={items[0].caption}
+        draggable="false"
+        class="aspect-square w-full max-w-xs object-cover select-none"
+      />
+      {items[0].caption && (
+        <figcaption class="mt-3 text-sm text-center text-neutral-700">
+          {items[0].caption}
+        </figcaption>
+      )}
+    </figure>
+  )
+}
