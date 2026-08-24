@@ -132,6 +132,10 @@ const formatDate = (date: Date) =>
       .travel-label:hover {
         background: var(--color-surface-hover);
       }
+      /* raise hovered marker above overlapping neighbours */
+      .maplibregl-marker:hover {
+        z-index: 1;
+      }
 
       /* --- Base UI Drawer (bottom sheet) --- */
       .sr-only {
